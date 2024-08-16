@@ -1,4 +1,5 @@
 import boto3
+from botocore.exceptions import ClientError
 
 def upload_to_s3(region,bucket_name, file_path, object_name=None):
     s3 = boto3.client('s3', region_name=region)
@@ -11,4 +12,14 @@ def upload_to_s3(region,bucket_name, file_path, object_name=None):
     
 def create_s3_bucket(region,bucket_name):
     s3 = boto3.client('s3', region_name=region)
-    s3.create_bucket(Bucket=bucket_name)
+    try:
+        s3.create_bucket(Bucket=bucket_name,
+                         CreateBucketConfiguration={
+                           'LocationConstraint': region,
+                        }
+                          )
+    except Exception as e:
+        print("Response:",e)
+        return e
+    
+    
