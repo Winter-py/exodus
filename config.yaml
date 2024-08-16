@@ -12,3 +12,6 @@ backup:
 cloud:
   provider: aws
   s3_bucket_name: my-temp-backup-bucket
+
+webserver:
+  server: IIS
