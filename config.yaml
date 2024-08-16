@@ -1,0 +1,14 @@
+backup:
+  files:
+    - /path/to/file1
+    - /path/to/file2
+  database:
+    type: mysql
+    host: localhost
+    user: user
+    password: password
+    name: dbname
+
+cloud:
+  provider: aws
+  s3_bucket_name: my-temp-backup-bucket
