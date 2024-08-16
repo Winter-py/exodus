@@ -12,3 +12,8 @@ def backup_files(file_paths, backup_dir):
             shutil.copy(file_path, backup_dir)
         else:
             print(f"File {file_path} not found.")
+
+
+
+def compress_files():
+    pass
