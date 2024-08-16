@@ -25,8 +25,8 @@ def main():
     region = config['cloud']['region']
     bucket_name = config['cloud']['s3_bucket_name']
     create_s3_bucket(region,bucket_name)
-    for file in config['region']['backup']['files']:
-        upload_to_s3(region,bucket_name, file)
+    for file in config['backup']['files']:
+        upload_to_s3(bucket_name, file)
 
 
     if args.Database:
