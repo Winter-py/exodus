@@ -9,6 +9,6 @@ def upload_to_s3(region,bucket_name, file_path, object_name=None):
     
     
     
-def create_s3_bucket(bucket_name, region):
+def create_s3_bucket(region,bucket_name):
     s3 = boto3.client('s3', region_name=region)
     s3.create_bucket(Bucket=bucket_name)
