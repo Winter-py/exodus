@@ -1,7 +1,7 @@
 backup:
   files:
-    - /path/to/file1
-    - /path/to/file2
+    - /mnt/c/backup
+    - /mnt/c/backup
   database:
     type: mysql
     host: localhost
@@ -11,6 +11,7 @@ backup:
 
 cloud:
   provider: aws
+  region: eu-west-2
   s3_bucket_name: my-temp-backup-bucket
 
 webserver:
