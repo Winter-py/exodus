@@ -6,7 +6,7 @@ from exodus.backup.files import backup_files
 def main():
     #Initialize
     parser = argparse.ArgumentParser(description="Secure application transfer tool")
-    parser.add_argument('-exce', '--config', help="Path to the configuration file")
+    parser.add_argument('-exce', '--config', help="Automate the transfer using a config file")
     parser.add_argument('-db', '--Database', help="Back up database", type=str) 
     
     
@@ -17,11 +17,14 @@ def main():
     config_loader = ConfigLoader(args.config)
     config = config_loader.load_config()
 
-    # Example: Backup files
+    #Backup files
     backup_dir = "/tmp/backup"
     backup_files(config['backup']['files'], backup_dir)
 
-    # Example: Upload to S3
+    #Backup Database
+    db_server = config['database']['type']['host']['user']['password']['dbname']
+
+    #Upload to S3
     region = config['cloud']['region']
     bucket_name = config['cloud']['s3_bucket_name']
     create_s3_bucket(region,bucket_name)
