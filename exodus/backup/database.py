@@ -4,7 +4,7 @@ def backup_database(config):
     db_type = config['database']['type']
     
     if db_type == 'mysql':
-        backup_mysql_database(config['database'])
+        backup_mysql_database(config['database']['host'],config['database']['user'],config['database']['password'],config['database']['name'])
     # Add support for more databases here
     
     if db_type == 'mssql':
