@@ -6,7 +6,7 @@ from exodus.backup.files import backup_files
 def main():
     #Initialize
     parser = argparse.ArgumentParser(description="Secure application transfer tool")
-    parser.add_argument('-exce', '--config', help="Path to the configuration file")
+    parser.add_argument('-exce', '--config', help="Automate the transfer using a config file")
     parser.add_argument('-db', '--Database', help="Back up database", type=str) 
     
     
