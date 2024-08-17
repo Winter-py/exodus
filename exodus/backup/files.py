@@ -1,7 +1,6 @@
-# backup_cli/backup/files.py
-
 import os
 import shutil
+from zipfile import ZipFile
 
 def backup_files(file_paths, backup_dir):
     if not os.path.exists(backup_dir):
@@ -15,5 +14,15 @@ def backup_files(file_paths, backup_dir):
 
 
 
-def compress_files():
+def compress_files(file_path, backup_dir):
+    with ZipFile() as zip_object:
+        for folder_name, sub_folders, file_names in os.walk(file_path):
+            for filename in file_names:
+                file_path = os.path.join(folder_name, filename)
+                zip_object.write(file_path, os.path.basename(file_path))
+
+
+
+def windows_compress():
     pass
+
