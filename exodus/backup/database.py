@@ -21,6 +21,18 @@ def backup_mysql_database(host,user,password,database,backup_file):
 
     print(f"Backup completed and saved to {backup_file}.")
     
-def backup_mssql_database(db_config):
-    # Implement MySQL backup logic using subprocess to run MSSQLSERVER
-    pass
+def backup_mssql_database(host,user,password,database,backup_path):
+    # Construct the SQL command to perform the backup
+    sql_command = f"BACKUP DATABASE [{database}] TO DISK = N'{backup_path}' WITH NOFORMAT, NOINIT, NAME = N'{database}-Full Database Backup', SKIP, NOREWIND, NOUNLOAD, STATS = 10"
+
+    # Construct the sqlcmd command to run the SQL command
+    command = f"sqlcmd -S {host} -U {user} -P {password} -Q \"{sql_command}\""
+
+    # Execute the command
+    result = subprocess.run(command, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE, universal_newlines=True)
+
+    # Check if there was an error
+    if result.returncode == 0:
+        print(f"Backup completed successfully and saved to {backup_path}.")
+    else:
+        print(f"Backup failed. Error: {result.stderr}")
