@@ -11,7 +11,7 @@ def backup_database(config):
         backup_mssql_database(config['database'])
 
 
-def backup_mysql_database(host,user,password,database):
+def backup_mysql_database(host,user,password,database,backup_file):
     # Construct the mysqldump command
     command = f"mysqldump -h {host} -u {user} -p{password} {database}"
 
