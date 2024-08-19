@@ -1,4 +1,6 @@
 import subprocess
+import tempfile
+
 
 def backup_database(config):
     db_type = config['database']['type']
@@ -21,7 +23,9 @@ def backup_mysql_database(host,user,password,database,backup_file):
 
     print(f"Backup completed and saved to {backup_file}.")
     
-def backup_mssql_database(host,user,password,database,backup_path):
+def backup_mssql_database(host,user,password,database,backup_file):
+    tmp = tempfile.gettempdir()
+    backup_path =  tmp + f"\\dbbackup\\{backup_file}"
     # Construct the SQL command to perform the backup
     sql_command = f"BACKUP DATABASE [{database}] TO DISK = N'{backup_path}' WITH NOFORMAT, NOINIT, NAME = N'{database}-Full Database Backup', SKIP, NOREWIND, NOUNLOAD, STATS = 10"
 
