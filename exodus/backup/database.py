@@ -15,6 +15,21 @@ def backup_database(config):
 
 
 def backup_mysql_database(host,user,password,database,backup_file):
+    
+    """
+    Backs up a MySQL database to a specified file and moves the backup to the system's temporary directory.
+
+    Args:
+        host (str): The database server hostname.
+        user (str): The database user.
+        password (str): The database user's password.
+        database (str): The name of the database to back up.
+        backup_file (str): The path to the initial backup file.
+    
+    Returns:
+        str: The full path to the stored backup file in the temp directory.
+    """
+    
     # Construct the mysqldump command
     command = f"mysqldump -h {host} -u {user} -p{password} {database}"
 
