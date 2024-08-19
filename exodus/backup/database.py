@@ -1,5 +1,6 @@
 import subprocess
 import tempfile
+from files import store_backup_in_temp_dir
 
 
 def backup_database(config):
