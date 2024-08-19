@@ -4,14 +4,33 @@ import tempfile
 from zipfile import ZipFile
 
 def backup_files(file_paths, backup_dir):
+    """
+    Backs up a list of files and directories to a specified backup directory.
+
+    Args:
+        file_paths (list): A list of file or directory paths to back up.
+        backup_dir (str): The directory where backups will be stored.
+    """
+    # Create the backup directory if it doesn't exist
     if not os.path.exists(backup_dir):
         os.makedirs(backup_dir)
     
+    # Loop through each file or directory path in the list
     for file_path in file_paths:
         if os.path.exists(file_path):
-            shutil.copy(file_path, backup_dir)
+            # If it's a file, copy it to the backup directory
+            if os.path.isfile(file_path):
+                shutil.copy(file_path, backup_dir)
+                print(f"File {file_path} backed up to {backup_dir}.")
+            # If it's a directory, copy the entire directory
+            elif os.path.isdir(file_path):
+                # Determine the target path in the backup directory
+                target_dir = os.path.join(backup_dir, os.path.basename(file_path))
+                shutil.copytree(file_path, target_dir)
+                print(f"Directory {file_path} backed up to {target_dir}.")
         else:
-            print(f"File {file_path} not found.")
+            print(f"File or directory {file_path} not found.")
+
 
 
 
