@@ -35,9 +35,17 @@ def backup_mysql_database(host,user,password,database,backup_file):
 
     # Open the backup file and redirect the command output to it
     with open(backup_file, 'w') as output_file:
-        subprocess.run(command, shell=True, stdout=output_file, stderr=subprocess.PIPE, universal_newlines=True)
+       result = subprocess.run(command, shell=True, stdout=output_file, stderr=subprocess.PIPE, universal_newlines=True)
 
-    print(f"Backup completed and saved to {backup_file}.")
+    if result.returncode == 0:
+        print(f"Backup completed and saved to {backup_file}.")
+        # Move the backup file to the system's temporary directory
+        temp_backup_path = store_backup_in_temp_dir(backup_file)
+        return temp_backup_path
+    else:
+        print(f"Backup failed. Error: {result.stderr}")
+        return None
+
     
 def backup_mssql_database(host,user,password,database,backup_file):
     tmp = tempfile.gettempdir()
