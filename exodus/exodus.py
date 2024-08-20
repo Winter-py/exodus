@@ -2,6 +2,7 @@ import argparse
 from exodus.config.config_loader import ConfigLoader
 from exodus.cloud.aws import upload_to_s3, create_s3_bucket
 from exodus.backup.files import backup_files
+from exodus.backup.database import backup_database 
 
 def main():
     #Initialize
@@ -22,7 +23,7 @@ def main():
     backup_files(config['backup']['files'], backup_dir)
 
     #Backup Database
-    db_server = config['database']['type']['host']['user']['password']['dbname']
+    backup_database(config['database']['type'],config)
 
     #Upload to S3
     region = config['cloud']['region']
