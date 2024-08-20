@@ -47,6 +47,21 @@ def backup_mysql_database(host,user,password,database,backup_file):
 
     
 def backup_mssql_database(host,user,password,database,backup_file):
+    
+    """
+    Backs up a MSSQLSERVER database to a specified file and moves the backup to the system's temporary directory.
+
+    Args:
+        host (str): The database server hostname.
+        user (str): The database user.
+        password (str): The database user's password.
+        database (str): The name of the database to back up.
+        backup_file (str): The path to the initial backup file.
+    
+    Returns:
+        str: The full path to the stored backup file in the temp directory.
+    """
+    
     tmp = tempfile.gettempdir()
     backup_path =  tmp + f"\\dbbackup\\{backup_file}"
     # Construct the SQL command to perform the backup
@@ -60,6 +75,10 @@ def backup_mssql_database(host,user,password,database,backup_file):
 
     # Check if there was an error
     if result.returncode == 0:
-        print(f"Backup completed successfully and saved to {backup_path}.")
+        print(f"Backup completed and saved to {backup_file}.")
+        # Move the backup file to the system's temporary directory
+        temp_backup_path = store_backup_in_temp_dir(backup_file)
+        return temp_backup_path
     else:
         print(f"Backup failed. Error: {result.stderr}")
+        return None
