@@ -1,13 +1,12 @@
 import subprocess
-import tempfile
-from files import store_backup_in_temp_dir
+import tempfile 
+ 
 
-
-def backup_database(config):
-    db_type = config['database']['type']
+def backup_database(db_type,config):
+    # db_type = config['database']['type']
     
     if db_type == 'mysql':
-        backup_mysql_database(config['database']['host'],config['database']['user'],config['database']['password'],config['database']['name'])
+        backup_mysql_database(config['database']['host'],config['database']['user'],config['database']['password'],config['database']['name'],"test.sql")
     # Add support for more databases here
     
     if db_type == 'mssql':
