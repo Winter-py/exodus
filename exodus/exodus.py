@@ -1,5 +1,6 @@
 import argparse
 import tempfile
+from datetime import datetime
 from exodus.config.config_loader import ConfigLoader
 from exodus.cloud.aws import upload_to_s3, create_s3_bucket
 from exodus.backup.files import backup_files
@@ -18,9 +19,15 @@ def main():
 
     config_loader = ConfigLoader(args.config)
     config = config_loader.load_config()
+    
+    #datatime 
+    # current dateTime
+    now = datetime.now()
+    # convert to string
+    date_time_str = now.strftime("%Y%m%d%H%M%S")
 
     #Backup files
-    backup_dir = tempfile.gettempdir()
+    backup_dir = tempfile.gettempdir() + f"\\E{date_time_str}"
     backup_files(config['backup']['files'], backup_dir)
 
     #Backup Database
