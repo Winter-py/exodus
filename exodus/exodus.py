@@ -1,4 +1,5 @@
 import argparse
+import tempfile
 from exodus.config.config_loader import ConfigLoader
 from exodus.cloud.aws import upload_to_s3, create_s3_bucket
 from exodus.backup.files import backup_files
@@ -19,7 +20,7 @@ def main():
     config = config_loader.load_config()
 
     #Backup files
-    backup_dir = "/tmp/backup"
+    backup_dir = tempfile.gettempdir()
     backup_files(config['backup']['files'], backup_dir)
 
     #Backup Database
