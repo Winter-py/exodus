@@ -33,6 +33,11 @@ def check_bucket_exists(s3_client, bucket_name):
 def create_s3_bucket(region,bucket_name):
     s3 = boto3.client('s3', region_name=region)
     
+    # Check if bucket already exists
+    if check_bucket_exists(s3, bucket_name):
+        print(f"Bucket '{bucket_name}' already exists.")
+        return False
+
     try:
         s3.create_bucket(Bucket=bucket_name,
                          CreateBucketConfiguration={
