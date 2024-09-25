@@ -11,7 +11,7 @@ def backup_database(db_type,config):
     # Add support for more databases here
     
     if db_type == 'mssql':
-        backup_mssql_database(config['database'])
+        backup_mssql_database(config['database']['host'],config['database']['user'],config['database']['password'],config['database']['name'],"test.bak")
 
 
 def backup_mysql_database(host,user,password,database,backup_file):
