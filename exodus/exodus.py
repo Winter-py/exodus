@@ -3,7 +3,7 @@ import tempfile
 from datetime import datetime
 from exodus.config.config_loader import ConfigLoader
 from exodus.cloud.aws import upload_to_s3, create_s3_bucket
-from exodus.backup.files import backup_files
+from exodus.backup.files import backup_files, compress_files, zip_files_in_directory
 from exodus.backup.database import backup_database 
 
 def main():
@@ -29,16 +29,22 @@ def main():
     #Backup files
     backup_dir = tempfile.gettempdir() + f"\\E{date_time_str}"
     backup_files(config['backup']['files'], backup_dir)
-
+    
     #Backup Database
-    backup_database(config['database']['type'],config)
+    # backup_database(config['database']['type'],config)
+   
+    #Compress
+    tmp = tempfile.gettempdir() 
+    
+    zip_files_in_directory(backup_dir)
+    
 
     #Upload to S3
     region = config['cloud']['region']
     bucket_name = config['cloud']['s3_bucket_name']
     create_s3_bucket(region,bucket_name)
-    for file in config['backup']['files']:
-        upload_to_s3(bucket_name, file)
+    
+    upload_to_s3(bucket_name, backup_dir)
 
 
     if args.Database:
