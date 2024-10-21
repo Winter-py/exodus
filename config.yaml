@@ -1,13 +1,15 @@
 backup:
   files:
-    - /mnt/c/backup
-    - /mnt/c/backup
-  database:
-    type: mysql
-    host: localhost
-    user: user
-    password: password
-    name: dbname
+    - C:\backup
+    - C:\Tools
+  
+database:
+  type: mssql
+  host: localhost
+  user: user
+  password: password
+  name: hub
+
 
 cloud:
   provider: aws
