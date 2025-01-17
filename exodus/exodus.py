@@ -2,7 +2,7 @@ import argparse
 import tempfile
 from datetime import datetime
 from exodus.config.config_loader import ConfigLoader
-from exodus.cloud.aws import upload_folder_to_s3, create_s3_bucket
+from exodus.cloud.aws import create_s3_bucket, upload_folder_to_s3, upload_zip_to_s3
 from exodus.backup.files import backup_files, compress_files, zip_files_in_directory
 from exodus.backup.database import backup_database 
 
@@ -32,20 +32,16 @@ def main():
     
     #Backup Database
     # backup_database(config['database']['type'],config)
-   
-    #Compress
-    tmp = tempfile.gettempdir() 
     
-    zip_files_in_directory(backup_dir)
+    # Compress files 
+    zip_file_path = zip_files_in_directory(backup_dir)
     
 
     #Upload to S3
     region = config['cloud']['region']
     bucket_name = config['cloud']['s3_bucket_name']
     create_s3_bucket(region,bucket_name)
-    
-    upload_folder_to_s3(bucket_name, backup_dir)
-
+    upload_zip_to_s3(bucket_name, zip_file_path)
 
     if args.Database:
         print("something happned") 
