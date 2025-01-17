@@ -2,7 +2,7 @@ import argparse
 import tempfile
 from datetime import datetime
 from exodus.config.config_loader import ConfigLoader
-from exodus.cloud.aws import upload_to_s3, create_s3_bucket
+from exodus.cloud.aws import upload_folder_to_s3, create_s3_bucket
 from exodus.backup.files import backup_files, compress_files, zip_files_in_directory
 from exodus.backup.database import backup_database 
 
@@ -44,7 +44,7 @@ def main():
     bucket_name = config['cloud']['s3_bucket_name']
     create_s3_bucket(region,bucket_name)
     
-    upload_to_s3(bucket_name, backup_dir)
+    upload_folder_to_s3(bucket_name, backup_dir)
 
 
     if args.Database:
