@@ -1,6 +1,9 @@
 import os
 import logging
 import boto3
+import shutil
+import tempfile
+import zipfile
 from botocore.exceptions import ClientError
 from exodus.utils.neaten import clean_up_failed_backup
 from tqdm import tqdm
@@ -14,7 +17,7 @@ def upload_folder_to_s3(bucket_name, folder_path, s3_folder_name=None):
     # Count total files
     total_files = sum([len(files) for r, d, files in os.walk(folder_path)])
     
-    with tqdm(total=total_files, desc="Uploading folder to S3") as pbar:
+    with tqdm(total=total_files, desc= f"Uploading {folder_path} to S3 ") as pbar:
         for root, dirs, files in os.walk(folder_path):
             for file in files:
                 file_path = os.path.join(root, file)
@@ -34,7 +37,7 @@ def upload_folder_to_s3(bucket_name, folder_path, s3_folder_name=None):
 def upload_to_s3(bucket_name, file_path, object_name=None):
     
     if object_name is None:
-        object_name = os.path.basename(file_path)
+        object_name = file_path.split('/')[-1]
         
     # Upload the file
     s3_client = boto3.client('s3')
@@ -56,7 +59,7 @@ def check_bucket_exists(s3_client, bucket_name):
             return False
         else:
             raise e
-    
+
     
 def create_s3_bucket(region,bucket_name):
     s3 = boto3.client('s3', region_name=region)
@@ -79,3 +82,22 @@ def create_s3_bucket(region,bucket_name):
     return True
     
     
+    
+def upload_zip_to_s3(bucket_name, zip_file_path, s3_folder_name=None):
+    # Use the system's temporary directory
+    temp_dir = tempfile.gettempdir()
+
+    # Create a unique subdirectory in the temp directory
+    extracted_dir = os.path.join(temp_dir, "extracted_zip")
+    os.makedirs(extracted_dir, exist_ok=True)
+
+    # Extract the ZIP file into the temporary directory
+    with zipfile.ZipFile(zip_file_path, 'r') as zipf:
+        zipf.extractall(extracted_dir)
+
+    # Upload the extracted contents to S3
+    result = upload_folder_to_s3(bucket_name, extracted_dir, s3_folder_name)
+
+    # Cleanup
+    shutil.rmtree(extracted_dir, ignore_errors=True)
+    return result
