@@ -44,34 +44,30 @@ def compress_files(file_path, backup_dir):
                 zip_object.write(file_path, os.path.basename(file_path))
 
 
-
 def zip_files_in_directory(directory_path):
-     # Get current date and time
+    # Get current date and time
     now = datetime.now()
-    # Convert to string in the format YYYYMMDDHHMMSS
     date_time_str = now.strftime("%Y%m%d%H%M%S")
 
-    # Create backup directory path with timestamp
-    backup_dir = os.path.join(tempfile.gettempdir(), f"E{date_time_str}")
-    # Ensure the backup directory exists
-    if not os.path.exists(backup_dir):
-        os.makedirs(backup_dir)
+    # Get the system's temporary directory
+    temp_dir = tempfile.gettempdir()
 
-    # Create a zip file path within the backup directory
-    zip_file_path = os.path.join(backup_dir, f"exodus_backup.zip")
+    # Create a unique directory within the temporary directory
+    backup_dir = os.path.join(temp_dir, f"E{date_time_str}")
+    os.makedirs(backup_dir, exist_ok=True)
 
-    # Create a ZipFile object
+    # Create a ZIP file path
+    zip_file_path = os.path.join(backup_dir, "exodus_backup.zip")
+
+    # Create the ZIP file
     with zipfile.ZipFile(zip_file_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
-        # Walk through all the files and directories in the given directory
-        for foldername, subfolders, filenames in os.walk(directory_path):
+        for foldername, _, filenames in os.walk(directory_path):
             for filename in filenames:
-                # Create the complete file path
                 file_path = os.path.join(foldername, filename)
-                # Add file to the zip file
                 zipf.write(file_path, os.path.relpath(file_path, directory_path))
-                print(zip_file_path)
-    return zip_file_path
+                print(f"Added to ZIP: {file_path}")
 
+    return zip_file_path
 
 
 def store_backup_in_temp_dir(backup_file):
