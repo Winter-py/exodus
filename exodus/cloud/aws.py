@@ -2,6 +2,26 @@ import os
 import logging
 import boto3
 from botocore.exceptions import ClientError
+from exodus.utils.neaten import clean_up_failed_backup
+
+def upload_folder_to_s3(bucket_name, folder_path, s3_folder_name=None):
+    if s3_folder_name is None:
+        s3_folder_name = os.path.basename(folder_path)
+    
+    s3_client = boto3.client('s3')
+    
+    for root, dirs, files in os.walk(folder_path):
+        for file in files:
+            file_path = os.path.join(root, file)
+            relative_path = os.path.relpath(file_path, folder_path)
+            s3_key = os.path.join(s3_folder_name, relative_path)
+            
+            try:
+                s3_client.upload_file(file_path, bucket_name, s3_key)
+            except ClientError as e:
+                logging.error(e)
+                return False
+    return True
 
 def upload_to_s3(bucket_name, file_path, object_name=None):
     
@@ -11,7 +31,7 @@ def upload_to_s3(bucket_name, file_path, object_name=None):
     # Upload the file
     s3_client = boto3.client('s3')
     try:
-        response = s3_client.upload_file(file_path, bucket_name, object_name)
+        response = s3_client.upload_file(file_path(), bucket_name, object_name)
     except ClientError as e:
         logging.error(e)
         return False
@@ -46,6 +66,7 @@ def create_s3_bucket(region,bucket_name):
                           )
     except ClientError as e:
         print("Response:",e)
+        clean_up_failed_backup()
         return False
     return True
     
