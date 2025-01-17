@@ -3,6 +3,7 @@ import logging
 import boto3
 from botocore.exceptions import ClientError
 from exodus.utils.neaten import clean_up_failed_backup
+from tqdm import tqdm
 
 def upload_folder_to_s3(bucket_name, folder_path, s3_folder_name=None):
     if s3_folder_name is None:
@@ -10,17 +11,24 @@ def upload_folder_to_s3(bucket_name, folder_path, s3_folder_name=None):
     
     s3_client = boto3.client('s3')
     
-    for root, dirs, files in os.walk(folder_path):
-        for file in files:
-            file_path = os.path.join(root, file)
-            relative_path = os.path.relpath(file_path, folder_path)
-            s3_key = os.path.join(s3_folder_name, relative_path)
-            
-            try:
-                s3_client.upload_file(file_path, bucket_name, s3_key)
-            except ClientError as e:
-                logging.error(e)
-                return False
+    # Count total files
+    total_files = sum([len(files) for r, d, files in os.walk(folder_path)])
+    
+    with tqdm(total=total_files, desc="Uploading folder to S3") as pbar:
+        for root, dirs, files in os.walk(folder_path):
+            for file in files:
+                file_path = os.path.join(root, file)
+                relative_path = os.path.relpath(file_path, folder_path)
+                s3_key = os.path.join(s3_folder_name, relative_path)
+                
+                try:
+                    s3_client.upload_file(file_path, bucket_name, s3_key)
+                except ClientError as e:
+                    logging.error(e)
+                    return False
+                pbar.update(1)
+    
+    print("Upload complete")
     return True
 
 def upload_to_s3(bucket_name, file_path, object_name=None):
