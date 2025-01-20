@@ -34,16 +34,6 @@ def backup_files(file_paths, backup_dir):
             print(f"File or directory {file_path} not found.")
 
 
-
-
-def compress_files(file_path, backup_dir):
-    with ZipFile() as zip_object:
-        for folder_name, sub_folders, file_names in os.walk(file_path):
-            for filename in file_names:
-                file_path = os.path.join(folder_name, filename)
-                zip_object.write(file_path, os.path.basename(file_path))
-
-
 def zip_files_in_directory(directory_path):
     # Get current date and time
     now = datetime.now()
