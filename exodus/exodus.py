@@ -11,7 +11,8 @@ def main():
     parser = argparse.ArgumentParser(description="Secure application transfer tool. Use this tool to back up files, optionally back up a database, compress files, and upload them to a cloud storage provider.")
     parser.add_argument('-exce', '--config', help="Automate the transfer using a config file")
     parser.add_argument('-db', '--Database', help="Back up database", type=str)
-    
+    parser.add_argument('-r', '--Restore', help="Restore a backup")
+    parser.add_argument('-A', '--auto', help="Automate transfer unpacking and restoration", action='store_true')
     
     
     #Parsing the argument
