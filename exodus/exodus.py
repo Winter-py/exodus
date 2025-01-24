@@ -58,7 +58,7 @@ def main():
     backup_dir = tempfile.gettempdir() + f"\\E{date_time_str}"
     backup_files(config['backup']['files'], backup_dir)
     
-    #Backup Database
+    #Backup Database (Untested)
     # backup_database(config['database']['type'],config)
     
     # Compress files 
