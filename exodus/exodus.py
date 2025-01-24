@@ -2,7 +2,7 @@ import argparse
 import tempfile
 from datetime import datetime
 from exodus.config.config_loader import ConfigLoader
-from exodus.cloud.aws import create_s3_bucket, upload_folder_to_s3, upload_zip_to_s3
+from exodus.cloud.aws import create_s3_bucket, upload_zip_to_s3
 from exodus.backup.files import backup_files, zip_files_in_directory
 from exodus.backup.database import backup_database 
 
