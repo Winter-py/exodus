@@ -17,8 +17,28 @@ def main():
     args = parser.parse_args()
 
 
-    config_loader = ConfigLoader(args.config)
-    config = config_loader.load_config()
+    # Handle missing config file
+    if not args.config:
+        print("No configuration file specified.")
+        use_interactive = input("Do you want to enter configuration details interactively? (yes/no): ").strip().lower()
+        if use_interactive == 'yes':
+            region = input("Enter the AWS region: ").strip()
+            s3_bucket_name = input("Enter the S3 bucket name: ").strip()
+            backup_files_path = input("Enter the path of files to back up: ").strip()
+
+            # Create a basic config dictionary
+            config = {
+                'cloud': {'region': region, 's3_bucket_name': s3_bucket_name},
+                'backup': {'files': backup_files_path},
+                'database': {'type': args.Database or None}
+            }
+        else:
+            print("Exiting... Please provide a configuration file using the --config argument.")
+            return
+    else:
+        # Load configuration from file
+        config_loader = ConfigLoader(args.config)
+        config = config_loader.load_config()
     
     #datatime 
     # current dateTime
