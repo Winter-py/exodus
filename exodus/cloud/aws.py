@@ -8,31 +8,44 @@ from botocore.exceptions import ClientError
 from exodus.utils.neaten import clean_up_failed_backup
 from tqdm import tqdm
 
-def upload_folder_to_s3(bucket_name, folder_path, s3_folder_name=None):
-    if s3_folder_name is None:
-        s3_folder_name = os.path.basename(folder_path)
-    
+def upload_zipfile_to_s3(bucket_name, zip_file_path, s3_key=None):
+    """
+    Upload a ZIP file to an S3 bucket with progress tracking.
+
+    :param bucket_name: The name of the S3 bucket.
+    :param zip_file_path: The local path to the ZIP file to upload.
+    :param s3_key: The S3 key (path in the bucket). Defaults to the ZIP file name.
+    :return: True if upload was successful, False otherwise.
+    """
     s3_client = boto3.client('s3')
-    
-    # Count total files
-    total_files = sum([len(files) for r, d, files in os.walk(folder_path)])
-    
-    with tqdm(total=total_files, desc= f"Uploading {folder_path} to S3 ") as pbar:
-        for root, dirs, files in os.walk(folder_path):
-            for file in files:
-                file_path = os.path.join(root, file)
-                relative_path = os.path.relpath(file_path, folder_path)
-                s3_key = os.path.join(s3_folder_name, relative_path)
-                
-                try:
-                    s3_client.upload_file(file_path, bucket_name, s3_key)
-                except ClientError as e:
-                    logging.error(e)
-                    return False
-                pbar.update(1)
-    
-    print("Upload complete")
-    return True
+
+    # Use the ZIP file's name as the S3 key if not provided
+    if s3_key is None:
+        s3_key = os.path.basename(zip_file_path)
+
+    try:
+        # Get the size of the file to upload
+        file_size = os.path.getsize(zip_file_path)
+
+        # Open the file in binary mode
+        with open(zip_file_path, 'rb') as f:
+            # Create a tqdm progress bar
+            with tqdm(total=file_size, unit='B', unit_scale=True, desc=f"Uploading {s3_key}") as pbar:
+                # Define a callback to update tqdm
+                def progress_callback(bytes_transferred):
+                    pbar.update(bytes_transferred)
+
+                # Use upload_fileobj to provide a callback for progress tracking
+                s3_client.upload_fileobj(f, bucket_name, s3_key, Callback=progress_callback)
+
+        print(f"Uploaded {zip_file_path} to s3://{bucket_name}/{s3_key}")
+        return True
+    except ClientError as e:
+        logging.error(f"Failed to upload {zip_file_path} to S3: {e}")
+        return False
+    except Exception as e:
+        logging.error(f"Unexpected error: {e}")
+        return False
 
 def upload_to_s3(bucket_name, file_path, object_name=None):
     
@@ -96,7 +109,7 @@ def upload_zip_to_s3(bucket_name, zip_file_path, s3_folder_name=None):
         zipf.extractall(extracted_dir)
     
     # Upload the extracted contents to S3
-    result = upload_folder_to_s3(bucket_name, zip_file_path, s3_folder_name)
+    result = upload_zipfile_to_s3(bucket_name, zip_file_path, s3_folder_name)
 
     # Cleanup
     shutil.rmtree(extracted_dir, ignore_errors=True)
