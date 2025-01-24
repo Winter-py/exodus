@@ -22,13 +22,20 @@ def main():
         print("No configuration file specified.")
         use_interactive = input("Do you want to enter configuration details interactively? (yes/no): ").strip().lower()
         if use_interactive == 'yes':
-            region = input("Enter the AWS region: ").strip()
-            s3_bucket_name = input("Enter the S3 bucket name: ").strip()
-            backup_files_path = input("Enter the path of files to back up: ").strip()
+            cloud = input("Enter the cloud provider (aws): ").strip().lower()
+            if cloud == 'aws':
+                region = input("Enter the AWS region: ").strip()
+                s3_bucket_name = input("Enter the S3 bucket name: ").strip()
+                backup_files_path = input("Enter the path of files to back up: ").strip()
+            
+            # if cloud == 'Azure':
+            #     region = input("Enter the Azure region: ").strip()
+            #     azure_blob_storage = input("Enter the Azure storage account name: ").strip()
+            #     backup_files_path = input("Enter the path of files to back up: ").strip()
 
             # Create a basic config dictionary
             config = {
-                'cloud': {'region': region, 's3_bucket_name': s3_bucket_name},
+                'cloud': {'region': region, 'storage': s3_bucket_name},
                 'backup': {'files': backup_files_path},
                 'database': {'type': args.Database or None}
             }
