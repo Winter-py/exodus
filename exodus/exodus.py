@@ -8,9 +8,10 @@ from exodus.backup.database import backup_database
 
 def main():
     #Initialize
-    parser = argparse.ArgumentParser(description="Secure application transfer tool")
+    parser = argparse.ArgumentParser(description="Secure application transfer tool. Use this tool to back up files, optionally back up a database, compress files, and upload them to a cloud storage provider.")
     parser.add_argument('-exce', '--config', help="Automate the transfer using a config file")
-    parser.add_argument('-db', '--Database', help="Back up database", type=str) 
+    parser.add_argument('-db', '--Database', help="Back up database", type=str)
+    
     
     
     #Parsing the argument
