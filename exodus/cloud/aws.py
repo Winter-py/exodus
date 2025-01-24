@@ -88,15 +88,15 @@ def upload_zip_to_s3(bucket_name, zip_file_path, s3_folder_name=None):
     temp_dir = tempfile.gettempdir()
 
     # Create a unique subdirectory in the temp directory
-    extracted_dir = os.path.join(temp_dir, "extracted_zip")
+    extracted_dir = os.path.join(temp_dir, "exodus_backup.zip")
     os.makedirs(extracted_dir, exist_ok=True)
 
     # Extract the ZIP file into the temporary directory
     with zipfile.ZipFile(zip_file_path, 'r') as zipf:
         zipf.extractall(extracted_dir)
-
+    
     # Upload the extracted contents to S3
-    result = upload_folder_to_s3(bucket_name, extracted_dir, s3_folder_name)
+    result = upload_folder_to_s3(bucket_name, zip_file_path, s3_folder_name)
 
     # Cleanup
     shutil.rmtree(extracted_dir, ignore_errors=True)
