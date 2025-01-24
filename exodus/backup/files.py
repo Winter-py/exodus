@@ -47,7 +47,7 @@ def zip_files_in_directory(directory_path):
     os.makedirs(backup_dir, exist_ok=True)
 
     # Create a ZIP file path
-    zip_file_path = os.path.join(backup_dir, "exodus_backup.zip")
+    zip_file_path = os.path.join(backup_dir, "edeparture.zip")
 
     # Create the ZIP file
     with zipfile.ZipFile(zip_file_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
