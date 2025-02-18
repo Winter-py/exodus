@@ -5,6 +5,7 @@ from exodus.config.config_loader import ConfigLoader
 from exodus.cloud.aws import create_s3_bucket, upload_zip_to_s3
 from exodus.backup.files import backup_files, zip_files_in_directory
 from exodus.backup.database import backup_database 
+from exodus.restore.restore_service import flask_app
 
 def main():
     #Initialize
@@ -15,9 +16,19 @@ def main():
     parser.add_argument('-A', '--auto', help="Automate transfer unpacking and restoration", action='store_true')
     
     
+    
     #Parsing the argument
-    args = parser.parse_args()
-
+    args = parser.parse_args()   
+    
+    if args.auto:
+        #Automate the transfer
+        print("Automating the transfer")
+        
+        exit(0) 
+  
+    if args.Restore:
+       flask_app()
+       exit(0)
 
     # Handle missing config file
     if not args.config:
@@ -78,3 +89,4 @@ def main():
     
 if __name__ == "__main__":
     main()
+    flask_app()
