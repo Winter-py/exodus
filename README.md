@@ -29,4 +29,3 @@ Exodus is open-source software released under the [Apache License](LICENSE).
 ## Contributions
 
 Contributions are welcome! Please refer to the [CONTRIBUTING.md](CONTRIBUTING.md) file for guidelines on how to get involved.
-

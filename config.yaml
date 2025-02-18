@@ -1,0 +1,20 @@
+backup:
+  files:
+    - C:\backup
+    - C:\Tools
+  
+database:
+  type: mssql
+  host: localhost
+  user: user
+  password: password
+  name: hub
+
+
+cloud:
+  provider: aws
+  region: eu-west-2
+  s3_bucket_name: my-temp-backup-bucket
+
+webserver:
+  server: IIS
