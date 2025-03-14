@@ -25,35 +25,3 @@ def notify_machine_b(target_url, s3_bucket, s3_key, restore_path, database_detai
         print(f"Machine B responded: {response.json()}")
     except requests.RequestException as e:
         print(f"Failed to notify Machine B: {e}")
-
-#Load configuration from file
-config_loader = ConfigLoader()
-config = config_loader.load_config()
-
-notify_machine_b(
-    target_url="http://<machine-b-ip>:5000/restore",
-    s3_bucket=config['cloud']['storage'],
-    s3_key=config['backup']['files'],
-    restore_path=config['restore']['path'],
-    database_details=config['database']
-)
-
-
-
-
-
-# Example usage
-notify_machine_b(
-    target_url="http://<machine-b-ip>:5000/restore",
-    s3_bucket="your-s3-bucket",
-    s3_key="path/to/backup.zip",
-    restore_path="/path/to/restore",
-    database_details={
-        "type": "mysql",
-        "host": "localhost",
-        "user": "root",
-        "password": "password",
-        "name": "my_database",
-        "dump_file": "db_backup.sql"
-    }
-)
