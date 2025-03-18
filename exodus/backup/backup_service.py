@@ -3,7 +3,7 @@ import argparse
 from exodus.config.config_loader import ConfigLoader
    
 
-def notify_machine_b(target_url, s3_bucket, s3_key, restore_path, database_details=None):
+def payload(target_url, s3_bucket, s3_key, restore_path, database_details=None):
     """
     Notify Machine B to start the restore process.
     :param target_url: URL of Machine B's REST API
