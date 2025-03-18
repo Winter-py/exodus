@@ -52,6 +52,25 @@ def restore():
                 with open(db_dump_file, 'rb') as dump_file:
                     run(restore_command, stdin=dump_file)
                 print(f"Restored MySQL database from {db_dump_file}")
+                
+                
+            if db_type == 'postgresql':
+                restore_command = [
+                    'psql',
+                    f'-h{db_host}', f'-U{db_user}', db_name
+                ]
+                with open(db_dump_file, 'rb') as dump_file:
+                    run(restore_command, stdin=dump_file)
+                print(f"Restored PostgreSQL database from {db_dump_file}")
+                
+            if db_type == 'mssql':
+                restore_command = [
+                    'sqlcmd',
+                    f'-S{db_host}', f'-U{db_user}', f'-P{db_password}', db_name
+                ]
+                with open(db_dump_file, 'rb') as dump_file:
+                    run(restore_command, stdin=dump_file)
+                print(f"Restored MSSQL database from {db_dump_file}")
 
         return jsonify({"status": "success", "message": "Restore completed"}), 200
 
