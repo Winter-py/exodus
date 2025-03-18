@@ -18,3 +18,7 @@ cloud:
 
 webserver:
   server: IIS
+
+restore:
+  path: C:\restore
+
