@@ -6,7 +6,7 @@ from exodus.cloud.aws import create_s3_bucket, upload_zip_to_s3
 from exodus.backup.files import backup_files, zip_files_in_directory
 from exodus.backup.database import backup_database 
 from exodus.restore.restore_service import flask_app
-from exodus.backup.backup_service import notify_machine_b, auto_transfer
+from exodus.backup.backup_service import payload
 
 
 def main():
@@ -64,7 +64,7 @@ def main():
         server_ip = args.server
         config_loader = ConfigLoader(args.config)
         config= config_loader.load_config()
-        notify_machine_b(
+        payload(
             target_url=f"http://{server_ip}:5000/restore",
             s3_bucket=config['cloud']['s3_bucket_name'],
             s3_key=config['backup']['files'],
